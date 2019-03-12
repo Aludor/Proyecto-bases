@@ -8,6 +8,7 @@ import java.sql.Statement;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 
 public class Login extends javax.swing.JDialog {
 
@@ -67,11 +68,19 @@ public class Login extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+<<<<<<< HEAD
         String sql = "SELECT * FROM login";
+=======
+        // TODO add your handling code here:
+        String sql = "SELECT * FROM login", vendedor = "";
+        int id = 0;
+        //JOptionPane.showMessageDialog(rootPane, "Datos Incorrectos","Error", JOptionPane.ERROR_MESSAGE);
+>>>>>>> 59b84b1ce0ce7ad22d475288fa7e673901ce8798
         Statement st = null;
         boolean adm = false, tra = false;
         try {
             st = cn.createStatement();
+<<<<<<< HEAD
             ResultSet rs = st.executeQuery(sql);
             while (rs.next()) {
                 if (rs.getString("usuario").equals(jTextField1.getText()) && rs.getString("contraseña").equals(jPasswordField1.getText()) && rs.getBoolean("adm")) {
@@ -85,6 +94,40 @@ public class Login extends javax.swing.JDialog {
                     break;
                 }
 
+=======
+            ResultSet rs = st.executeQuery(sql), rv;
+            while (rs.next()) {
+                if (rs.getString("usuario").equals(jTextField1.getText()) && rs.getString("contraseña").equals(jPasswordField1.getText()) && rs.getBoolean("admin")) {
+                    System.out.println("administrador");
+                    adm = true;
+                    this.dispose();
+                    Principal p = new Principal();
+                    p.setVisible(true);
+                    break;
+                }
+                if (rs.getString("usuario").equals(jTextField1.getText()) && rs.getString("contraseña").equals(jPasswordField1.getText()) && !rs.getBoolean("admin")) {
+                    System.out.println("trabajador");
+                    rs.close();
+                    System.out.println(rs.getInt("id"));
+                    rv = st.executeQuery("SELECT v.nombre, lo.id FROM vendedor v \n "
+                            + "INNER JOIN  login lo "
+                            + "ON v.id = lo.vendedor_id "
+                            + "WHERE lo.id = " + rs.getInt("id") + ";");
+                    if (rv.next()) {
+                        vendedor = rv.getString("nombre");
+                        id = rv.getInt("id");
+                    }
+                    System.out.println(vendedor);
+                    System.out.println(id);
+                    tra = true;
+                    rv.close();
+                    this.dispose();
+                    Ventas v = new Ventas(null, true);
+                    v.vendedor(vendedor, id);
+                    v.setVisible(true);
+                    break;
+                }
+>>>>>>> 59b84b1ce0ce7ad22d475288fa7e673901ce8798
             }
             if (tra == adm) {
                 JOptionPane.showMessageDialog(rootPane, "Datos Incorrectos", "Error", JOptionPane.ERROR_MESSAGE);
